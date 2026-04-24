@@ -26,7 +26,8 @@ export default defineConfig({
     ],
     socialLinks: [{ icon: 'github', link: 'https://github.com/burnmark-io' }],
     footer: {
-      message: 'MIT licensed open source.',
+      message:
+        'MIT licensed open source. <a href="https://ko-fi.com/mannes" rel="noopener noreferrer">Buy me a roll of labels</a> · <a href="https://github.com/sponsors/mannes" rel="noopener noreferrer">Sponsor on GitHub</a>',
       copyright: 'Copyright © burnmark-io',
     },
     search: { provider: 'local' },
