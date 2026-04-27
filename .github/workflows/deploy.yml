@@ -1,8 +1,13 @@
-name: Deploy VitePress to GitHub Pages
+name: Deploy label-maker to GitHub Pages
 
 on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [label-maker-updated]
   push:
     branches: [main]
+    paths:
+      - '.github/workflows/deploy.yml'
 
 permissions:
   contents: read
@@ -17,18 +22,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout label-maker
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          repository: burnmark-io/label-maker
+          ref: ${{ github.event.client_payload.ref || 'main' }}
+          token: ${{ secrets.SOURCE_TOKEN || github.token }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run docs:build
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/.vitepress/dist
+          path: dist
 
   deploy:
     needs: build
